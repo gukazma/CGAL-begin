@@ -1,6 +1,7 @@
 set(TARGET_NAME DemoApp)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+find_package(CGAL CONFIG REQUIRED)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -24,6 +25,7 @@ Qt5::Core
 Qt5::Gui
 Qt5::Widgets
 Qt5::OpenGL
+CGAL::CGAL
 )
 
 # if(MSVC)
