@@ -20,12 +20,15 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${CPP_HEAD_FILES} ${CPP_SO
 
 add_executable(${TARGET_NAME} ${CPP_HEAD_FILES} ${CPP_SOUCE_FILES} ${UI_SOUCE_FILES}  ${QRC_FILE} ${APPRC_FILE} ${Translatefile})
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER Apps)
+set_property(TARGET ${TARGET_NAME} PROPERTY CXX_STANDARD 17)
+
 target_link_libraries(${TARGET_NAME} PRIVATE
 Qt5::Core
 Qt5::Gui
 Qt5::Widgets
 Qt5::OpenGL
 CGAL::CGAL
+rerun_sdk
 )
 
 # if(MSVC)
