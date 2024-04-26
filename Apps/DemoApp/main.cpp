@@ -1,29 +1,47 @@
 #include <rerun.hpp>
- #include <vector>
-
-
+#include <vector>
+#include <CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h>
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Surface_mesh.h>
+#include <CGAL/bounding_box.h>
+
 typedef CGAL::Simple_cartesian<double> K;
+typedef K::Point_3 Point;
 typedef CGAL::Surface_mesh<K::Point_3> Mesh;
 typedef Mesh::Vertex_index             vertex_descriptor;
 typedef boost::graph_traits<Mesh>::face_descriptor   face_descriptor;
 typedef boost::graph_traits<Mesh>::halfedge_descriptor halfedge_descriptor;
 typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
+
+namespace PMP = CGAL::Polygon_mesh_processing;
  int main() {
+
     Mesh m;
-    // Add the points as vertices
-    vertex_descriptor u = m.add_vertex(K::Point_3(0, 1, 0));
-    vertex_descriptor v = m.add_vertex(K::Point_3(0, 0, 0));
-    vertex_descriptor w = m.add_vertex(K::Point_3(1, 1, 0));
-    vertex_descriptor x = m.add_vertex(K::Point_3(1, 0, 0));
-    m.add_face(u, v, w);
-    face_descriptor f = m.add_face(u, v, x);
-    if (f == Mesh::null_face()) {
-        std::cerr << "The face could not be added because of an orientation error." << std::endl;
-        f = m.add_face(u, x, v);
-        assert(f != Mesh::null_face());
+
+    if (!PMP::IO::read_polygon_mesh("D:/data/ply/bunny.ply", m)) {
+        std::cerr << "Error: Invalid input." << std::endl;
+        return EXIT_FAILURE;
     }
+
+    auto bbox = CGAL::bounding_box(m.points().begin(), m.points().end());
+    auto max  = bbox.max();
+    auto min  = bbox.min();
+    auto center = (max - min)/2;
+    for (auto& p : m.points()) {
+        p -= center;
+    }
+    //// Add the points as vertices
+    //vertex_descriptor u = m.add_vertex(K::Point_3(0, 1, 0));
+    //vertex_descriptor v = m.add_vertex(K::Point_3(0, 0, 0));
+    //vertex_descriptor w = m.add_vertex(K::Point_3(1, 1, 0));
+    //vertex_descriptor x = m.add_vertex(K::Point_3(1, 0, 0));
+    //m.add_face(u, v, w);
+    //face_descriptor f = m.add_face(u, v, x);
+    //if (f == Mesh::null_face()) {
+    //    std::cerr << "The face could not be added because of an orientation error." << std::endl;
+    //    f = m.add_face(u, x, v);
+    //    assert(f != Mesh::null_face());
+    //}
      const auto rec = rerun::RecordingStream("rerun_example_mesh3d_indexed");
      rec.spawn().exit_on_failure();
 
