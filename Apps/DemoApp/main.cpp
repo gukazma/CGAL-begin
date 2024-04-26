@@ -8,6 +8,7 @@ typedef CGAL::Simple_cartesian<double> K;
 typedef CGAL::Surface_mesh<K::Point_3> Mesh;
 typedef Mesh::Vertex_index             vertex_descriptor;
 typedef boost::graph_traits<Mesh>::face_descriptor   face_descriptor;
+typedef boost::graph_traits<Mesh>::halfedge_descriptor halfedge_descriptor;
 typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
  int main() {
     Mesh m;
@@ -51,13 +52,24 @@ typedef boost::graph_traits<Mesh>::vertex_descriptor vertex_descriptor;
              .with_vertex_colors(vertex_colors)
              .with_mesh_properties(rerun::components::MeshProperties::from_triangle_indices(indices))
      );
+     std::vector<rerun::Position3D> origins;
+     std::vector<rerun::Vector3D>   vectors;
+     std::vector<rerun::Color>      colors;
 
-     /*rerun::LineStrip3D linestrip({
-         {0.0f, 1.0f, 0.0f},
-         {1.0f, 0.0f, 0.0f},
-         {0.0f, 0.0f, 0.0f},
-         {0.0f, 1.0f, 0.0f},
-     });
 
-     rec.log("segments", rerun::LineStrips3D(linestrip));*/
+     for (halfedge_descriptor hf : CGAL::halfedges(m)) {
+        vertex_descriptor source = CGAL::source(hf, m);
+        vertex_descriptor target = CGAL::target(hf, m);
+
+        auto sourcePoint = m.point(source);
+        auto targetPoint = m.point(target);
+        auto v = targetPoint - sourcePoint;
+        origins.push_back({(float)sourcePoint.x(), (float)sourcePoint.y(), (float)sourcePoint.z()});
+        vectors.push_back({(float)v.x(), (float)v.y(), (float)v.z()});
+        colors.push_back({0, 0, 255});
+     }
+
+
+     rec.log("arrows",
+             rerun::Arrows3D::from_vectors(vectors).with_origins(origins).with_colors(colors));
  }
