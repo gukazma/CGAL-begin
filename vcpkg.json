@@ -4,6 +4,7 @@
   "dependencies": [
     "gtest",
     "arrow",
-    "cgal"
+    "cgal",
+    "eigen3"
   ]
 }

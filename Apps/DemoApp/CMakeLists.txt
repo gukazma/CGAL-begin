@@ -2,6 +2,7 @@ set(TARGET_NAME DemoApp)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 find_package(CGAL CONFIG REQUIRED)
+find_package(Eigen3 CONFIG REQUIRED)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -29,6 +30,7 @@ Qt5::Widgets
 Qt5::OpenGL
 CGAL::CGAL
 rerun_sdk
+Eigen3::Eigen
 )
 
 # if(MSVC)
