@@ -8,6 +8,9 @@
       "features": [
         "qt"
       ]
-    }
+    },
+    "spdlog",
+    "openimageio",
+    "glfw3"
   ]
 }

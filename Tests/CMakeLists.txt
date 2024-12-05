@@ -30,3 +30,8 @@ add_test(
     NAME ${TARGET_NAME}
     COMMAND ${TARGET_NAME}
 )
+
+add_custom_command(TARGET ${TARGET_NAME} POST_BUILD 
+    COMMAND Qt6::windeployqt
+    ARGS $<TARGET_FILE:${TARGET_NAME}>
+)
